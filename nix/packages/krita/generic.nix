@@ -47,6 +47,7 @@
   libunibreak,
   libwebp,
   qtmultimedia,
+  qtimageformats,
   qtx11extras,
   quazip,
   SDL2,
@@ -57,7 +58,7 @@
   kde-channel,
   hash,
   krita-ai-tools-src,
-  dlimgedit
+  dlimgedit,
 }:
 
 mkDerivation rec {
@@ -134,6 +135,7 @@ mkDerivation rec {
     libunibreak
     libwebp
     qtmultimedia
+    qtimageformats
     qtx11extras
     quazip
     SDL2

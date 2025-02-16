@@ -4,6 +4,7 @@
   inputs = {
     flake-parts.url = "github:hercules-ci/flake-parts";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    dlimgedit.url = "github:wataruY/dlimgedit/nix";
   };
 
   outputs = inputs@{ flake-parts, ... }:
@@ -16,13 +17,20 @@
 
       ];
       systems = [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" "x86_64-darwin" ];
-      perSystem = { config, self', inputs', pkgs, system, ... }: {
+      perSystem = { config, self', inputs', pkgs, system, ... }: 
+      let 
+        libdlimgedit = inputs.dlimgedit.packages."${system}".libdlimgedit;
+      in
+      {
         # Per-system attributes can be defined here. The self' and inputs'
         # module parameters provide easy access to attributes of the same
         # system.
 
-        packages = {
-          krita = pkgs.libsForQt5.callPackage ./nix/packages/krita {};
+        packages = rec {
+          krita-ai-tools-src = pkgs.callPackage ./nix/packages/krita-ai-tools {};
+          dlimgedit = inputs.dlimgedit.packages."${system}".libdlimgedit;
+          dlimgedit-gpu = inputs.dlimgedit.packages."${system}".libdlimgedit-cuda;
+          krita = pkgs.libsForQt5.callPackage ./nix/packages/krita { krita-ai-tools-src = krita-ai-tools-src; dlimgedit = dlimgedit-gpu; };
         };
 
         devShells.default = pkgs.mkShell {
@@ -107,6 +115,8 @@
             PYQT5_SIP_DIR = "${pkgs.python3Packages.pyqt5}/${pkgs.python3Packages.python.sitePackages}/PyQt5/bindings";
             PYQT_SIP_DIR_OVERRIDE = "${pkgs.python3Packages.pyqt5}/${pkgs.python3Packages.python.sitePackages}/PyQt5/bindings";
             BUILD_KRITA_QT_DESIGNER_PLUGINS = "ON";
+            
+            dlimgedit_ROOT = "${libdlimgedit}";
           };
 
           shellHook = ''

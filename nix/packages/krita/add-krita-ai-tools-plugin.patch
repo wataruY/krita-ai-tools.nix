@@ -1,0 +1,12 @@
+diff --git a/plugins/CMakeLists.txt b/plugins/CMakeLists.txt
+index 09ac696d8e..1749eab1de 100644
+--- a/plugins/CMakeLists.txt
++++ b/plugins/CMakeLists.txt
+@@ -10,6 +10,7 @@ add_subdirectory( metadata )
+ add_subdirectory( paintops )
+ add_subdirectory( tools )
+ add_subdirectory( qt )
++add_subdirectory( krita-ai-tools )
+ 
+ if (HAVE_PYQT5 AND HAVE_SIP AND HAVE_PYTHONLIBS)
+     add_subdirectory( python )

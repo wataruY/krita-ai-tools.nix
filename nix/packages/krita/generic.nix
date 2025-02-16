@@ -56,6 +56,8 @@
   version,
   kde-channel,
   hash,
+  krita-ai-tools-src,
+  dlimgedit
 }:
 
 mkDerivation rec {
@@ -74,7 +76,14 @@ mkDerivation rec {
       url = "https://invent.kde.org/graphics/krita/-/commit/2d71c47661d43a4e3c1ab0c27803de980bdf2bb2.diff";
       hash = "sha256-U3E44nj4vra++PJV20h4YHjES78kgrJtr4ktNeQfOdA=";
     })
+    ./add-krita-ai-tools-plugin.patch
   ];
+
+  postUnpack = ''
+    mkdir $sourceRoot/plugins/krita-ai-tools
+    cp -r ${krita-ai-tools-src}/* $sourceRoot/plugins/krita-ai-tools/
+    chmod -R u+w $sourceRoot/plugins/krita-ai-tools/
+  '';
 
   nativeBuildInputs = [
     cmake
@@ -164,6 +173,7 @@ mkDerivation rec {
     "-DPYQT5_SIP_DIR=${python3Packages.pyqt5}/${python3Packages.python.sitePackages}/PyQt5/bindings"
     "-DPYQT_SIP_DIR_OVERRIDE=${python3Packages.pyqt5}/${python3Packages.python.sitePackages}/PyQt5/bindings"
     "-DBUILD_KRITA_QT_DESIGNER_PLUGINS=ON"
+    "-Ddlimgedit_ROOT=${dlimgedit}"
   ];
 
   meta = with lib; {
